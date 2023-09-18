@@ -30,7 +30,7 @@ const Index = () => {
   };
 
   return (
-    <div className=" bg-slate-800 text-white p-10 rounded-md m-10  ">
+    <div className=" bg-slate-700 text-white p-10 rounded-md m-10  ">
       <h1>Rating System</h1>
       {user && (
         <div>
