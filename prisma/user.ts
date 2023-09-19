@@ -13,21 +13,25 @@ export const getUser = async (id: string) => {
   return user;
 };
 
-export const createUser = async (
+export async function createUser(
   email: string,
   name: string,
   password: string
-) => {
-  const hashedPassword = await hash(password);
-  const user = await prisma.user.create({
-    data: {
-      email,
-      name,
-      password: hashedPassword,
-    },
-  });
-  return user;
-};
+) {
+  try {
+    const hashedPassword = await hash(password);
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name,
+        password: hashedPassword,
+      },
+    });
+    return user;
+  } catch (error) {
+    return error;
+  }
+}
 
 export const updateUser = async (
   id: string,
