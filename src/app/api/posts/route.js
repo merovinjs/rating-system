@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
 import { createUser } from "../../../../prisma/user";
-import { NextApiRequest } from "next";
-interface CustomRequest extends NextApiRequest {
-  json: () =>
-    | Promise<{ email: string; name: string; password: string }>
-    | { email: any; name: any; password: any };
-}
-export const POST = async (request: CustomRequest) => {
+
+export const POST = async (request) => {
   const { email, name, password } = await request.json();
 
   const newPost = await createUser(email, name, password);
