@@ -1,14 +1,12 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { createUser } from "../../../../prisma/user";
-export const POST = async (
-  request:
-    | NextRequest
-    | {
-        json: () =>
-          | PromiseLike<{ email: string; name: string; password: string }>
-          | { email: string; name: string; password: string };
-      }
-) => {
+import { NextApiRequest } from "next";
+interface CustomRequest extends NextApiRequest {
+  json: () =>
+    | Promise<{ email: string; name: string; password: string }>
+    | { email: string; name: string; password: string };
+}
+export const POST = async (request: CustomRequest) => {
   const { email, name, password } = await request.json();
 
   const newPost = await createUser(email, name, password);
