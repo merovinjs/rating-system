@@ -1,8 +1,13 @@
 "use client";
+import { fetchPost } from "@/customhooks/fetchhook";
+import { User } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import NotFound from "./not-found";
 
 const Sigup = () => {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,20 +24,22 @@ const Sigup = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const result = await fetch("/api/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      const result = await fetchPost<User>("/api/posts", {
         name,
         email,
         password,
-      }),
-    });
-    const json = await result.json();
-    console.log(json);
+      } as User);
+
+      if (result && result.id) {
+        router.push("/login");
+        console.log(result);
+      }
+    } catch (error: any) {
+      throw new Error(error);
+    }
   };
+
   return (
     <form>
       <input onChange={handleName} type="text" placeholder="name" />

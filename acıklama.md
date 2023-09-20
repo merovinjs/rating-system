@@ -1,0 +1,1 @@
+--layout içerisine error boundy eklemeyi unutma--
