@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 import Deneme from "@/components/Deneme";
+import { setLocalStorage } from "../../utily/localStorage";
 const Login = () => {
   const [showdeneme, setShowDeneme] = useState(false);
   const [email, setEmail] = useState("");
@@ -22,12 +23,13 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const result = await fetchPost<User>("/api/posts", {
+      const result = await fetchPost<User>("/api/login", {
         email,
         password,
       } as User);
-
+      console.log("result", result);
       if (result && result.id) {
+        setLocalStorage("token", result.token);
         router.push("/home");
       } else {
         setShowDeneme(true);

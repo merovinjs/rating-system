@@ -15,9 +15,10 @@ model User {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   user_type   UserType?
-  Candidate   Candidate?
-  Participant Participant?
-  Admin       Admin?
+  candidate   Candidate?
+  participant Participant?
+  admin       Admin?
+  token       String?
 }
 
 model UserType {

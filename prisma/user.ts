@@ -1,7 +1,8 @@
 import prisma from "./prisma";
 import { hash } from "argon2";
 import { verify } from "argon2";
-
+import * as jose from "jose";
+import { createDefaultUserType, getUserType } from "./user-type";
 export async function getAllUsers() {
   try {
     const users = await prisma.user.findMany({});
@@ -26,10 +27,23 @@ export async function getUserLogin(email: string, password: string) {
     const user = await prisma.user.findUnique({
       where: { email },
     });
-    if (!user) throw new Error("User Not found");
+    if (!user) throw new Error("User not found");
     const valid = await verify(user.password, password);
 
-    if (!valid) throw new Error("Password is not valid");
+    if (!valid) throw new Error("Invalid password");
+    const userType = await getUserType(user.id);
+
+    if (!userType) throw new Error("User type not found");
+
+    const jwt = new jose.SignJWT({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      user_type: userType.type,
+    }).setProtectedHeader({ alg: "HS256" });
+    const key = new TextEncoder().encode(process.env.JWT_SECRET);
+    user.token = await jwt.sign(key);
+
     return user;
   } catch (error) {
     return error;
@@ -50,6 +64,15 @@ export async function createUser(
         password: hashedPassword,
       },
     });
+    const userType = await createDefaultUserType(user.id);
+    const jwt = new jose.SignJWT({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      user_type: userType.type,
+    }).setProtectedHeader({ alg: "HS256" });
+    const key = new TextEncoder().encode(process.env.JWT_SECRET);
+    user.token = await jwt.sign(key);
     return user;
   } catch (error) {
     return error;
