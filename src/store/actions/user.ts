@@ -11,7 +11,7 @@ export const setUser = (
 ): AppThunk<Promise<void>> => {
   return async (dispatch, getState) => {
     const state = getState();
-    console.log(state.user.user);
+    console.log(state);
     dispatch({
       type: UserActionTypes.SET_USER,
       payload: {

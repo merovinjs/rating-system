@@ -7,6 +7,9 @@ export function middleware(request: NextRequest, response: NextResponse) {
   if (nextUrl.pathname.startsWith("/api")) {
     console.log("---");
     console.log(`[${method}] ${url}`);
+    console.log("---");
+    console.log(nextUrl);
+    console.log("---");
     console.log(body);
     console.log("---");
   }
