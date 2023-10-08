@@ -8,3 +8,8 @@ it("should have Rating test", () => {
 
   expect(myElement).toBeInTheDocument();
 });
+it("should have a  text", () => {
+  render(<Page />);
+  const myElement = screen.getByText("Psge");
+  expect(myElement).toBeInTheDocument();
+});
